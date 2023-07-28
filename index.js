@@ -1,19 +1,23 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
+const bodyParser = require('body-parser');
 const chats = require('./data/data');
 
+app.use(cors());
+app.use(bodyParser.json());
+app.options('*', cors());
 app.get('/', (req, res) => {
     res.send('Hello from socket 1');
 });
 
 app.get('/api/chat/:id', (req, res) => {
     const id = req.params.id;
-    console.log(id);
     const chat = chats.find(chat => chat._id === id);
     res.send(chat);
 });
 
-app.get('/api/chat', (req, res) => {
+app.get('/api/chats', (req, res) => {
     res.send(chats);
 });
 
