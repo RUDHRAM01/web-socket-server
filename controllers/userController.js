@@ -1,6 +1,6 @@
 const Users = require('../models/UserModel');
 const bcrypt = require('bcrypt');
-const { generateToken } = require('../db/Auth');
+const { generateToken } = require('../db/token');
 const register = async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
@@ -70,8 +70,23 @@ const login = async (req, res) => {
     }
 };
 
+// /api/users?search=name
+const allUser = async (req, res) => {
+    const keyword = req.query.search ? {
+        $or: [
+            { username: { $regex: req.query.search, $options: 'i' } },
+            { email: { $regex: req.query.search, $options: 'i' } }
+        ]
+    } : {};
+
+    const result = await Users.find(keyword).find({ _id: { $ne: req.user.id } });
+    res.status(200).json(result);
+};
+
+
 module.exports = {
     register,
-    login
+    login,
+    allUser
 };
 

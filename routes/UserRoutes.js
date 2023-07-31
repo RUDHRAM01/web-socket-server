@@ -1,11 +1,8 @@
 const userRouter = require('express').Router();
 const userController = require('../controllers/userController');
-const { auth } = require('../db/Auth');
-
-// Import the express-rate-limit package
+const middleware = require('../middleware/authMiddleware');
 const rateLimit = require('express-rate-limit');
 
-// Set the maximum number of requests allowed within a specific time window (e.g., 10 requests in 15 minutes)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // Limit each IP to 10 requests per windowMs
@@ -28,10 +25,9 @@ const logoutLimiter = rateLimit({
 
 userRouter.post('/register', userController.register);
 
-// Apply the rate limit middleware to the login route
 userRouter.post('/login', loginLimiter, userController.login);
 
-// Apply the rate limit middleware to the logout route
+userRouter.get('/allusers',middleware.auth, userController.allUser);
 // userRouter.post('/logout', logoutLimiter, userController.logout);
 
 module.exports = userRouter;
