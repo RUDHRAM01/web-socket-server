@@ -9,10 +9,6 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '/img/download.jpg'
     },
-    email: {
-        type: String,
-        unique: true
-    },
     password: {
         type: String,
         require: true,

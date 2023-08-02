@@ -23,17 +23,23 @@ const register = async (req, res) => {
                 username,
                 password : hashPass
             });
-
-            const savedUser = await newUser.save();
-            res.status(200).json(
-                {
-                    user: {
-                        id: savedUser._id,
-                        username: savedUser.username,
-                        token: generateToken(savedUser._id)
+           
+            
+            try {
+                const savedUser = await newUser.save();
+                res.status(200).json(
+                    {
+                        user: {
+                            id: savedUser._id,
+                            username: savedUser.username,
+                            token: generateToken(savedUser._id)
+                        }
                     }
-                }
-            );
+                );
+            } catch (err) {
+                console.log(err);
+            }
+           
         }
     } catch (err) {
         res.status(400).json({ err });
@@ -75,7 +81,7 @@ const allUser = async (req, res) => {
     const keyword = req.query.search ? {
         $or: [
             { username: { $regex: req.query.search, $options: 'i' } },
-            { email: { $regex: req.query.search, $options: 'i' } }
+            // { email: { $regex: req.query.search, $options: 'i' } }
         ]
     } : {};
 
