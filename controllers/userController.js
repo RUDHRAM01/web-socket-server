@@ -55,7 +55,7 @@ const login = async (req, res) => {
     try {
         const re = await Users.find({ username });
         if (re.length === 0)
-            return res.status(400).json({ msg: 'User does not exist' });
+            return res.status(400).json('User does not exist');
         else {
             const isMatch = await bcrypt.compare(password, re[0].password);
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });

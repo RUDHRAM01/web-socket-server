@@ -10,7 +10,7 @@ const {notFound} = require('./middleware/errorMiddleware');
 const {errorHandler} = require('./middleware/errorMiddleware');
 
 require('dotenv').config();
-app.use(express.json());
+
 app.use(cors());
 app.use(bodyParser.json());
 app.options('*', cors());
