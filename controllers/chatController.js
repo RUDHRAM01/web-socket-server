@@ -21,7 +21,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
     isChat = await User.populate(isChat, {
         path: "latestMessage.sender",
-        select: "username profilePic email"
+        select: "email profilePic email"
     });
 
     if (isChat.length > 0) {
@@ -52,7 +52,7 @@ const fetchChats = asyncHandler(async (req, res) => {
             .populate("groupAdmin").sort({ updatedAt: -1 });
         const fullChat = await User.populate(chat, {
             path: "latestMessage.sender",
-            select: "username profilePic email"
+            select: "email profilePic email"
         });
 
             res.status(200).json(fullChat);
