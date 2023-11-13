@@ -2,8 +2,8 @@ const Users = require('../models/UserModel');
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../db/token');
 const register = async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
 
@@ -14,13 +14,13 @@ const register = async (req, res) => {
     }
 
     try {
-        const re = await Users.find({ username });
+        const re = await Users.find({ email });
         if (re.length > 0)
             return res.status(400).json({ msg: 'User already exists' });
         else {
             const hashPass = await bcrypt.hash(password, 10);
             const newUser = new Users({
-                username,
+                email,
                 password : hashPass
             });
            
@@ -31,7 +31,7 @@ const register = async (req, res) => {
                     {
                         user: {
                             id: savedUser._id,
-                            username: savedUser.username,
+                            email: savedUser.email,
                             token: generateToken(savedUser._id)
                         }
                     }
@@ -47,27 +47,32 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    console.log(email,password);
+    
+    if (!email || !password) {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
 
     try {
-        const re = await Users.find({ username });
+        const re = await Users.find({ email });
         if (re.length === 0)
             return res.status(400).json('User does not exist');
         else {
             const isMatch = await bcrypt.compare(password, re[0].password);
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
+                console.log("d");
+                
                 res.status(200).json(
                     {
                         user: {
                             id: re[0]._id,
-                            username: re[0].username,
+                            email: re[0].email,
                             token: generateToken(re[0]._id)
                         }
                     }
+                    
                 );
             }
         }
@@ -80,7 +85,7 @@ const login = async (req, res) => {
 const allUser = async (req, res) => {
     const keyword = req.query.search ? {
         $or: [
-            { username: { $regex: req.query.search, $options: 'i' } },
+            { email: { $regex: req.query.search, $options: 'i' } },
             // { email: { $regex: req.query.search, $options: 'i' } }
         ]
     } : {};
