@@ -15,11 +15,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.options('*', cors());
 
+
+
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
 app.use(notFound);
 app.use(errorHandler);
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
+app.listen(4000, () => {
+    console.log('Server is running on port 4000');
     db();
 });
