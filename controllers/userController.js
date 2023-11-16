@@ -103,14 +103,13 @@ const register = async (req, res) => {
 
 // /api/users?search=name
 const allUser = async (req, res) => {
-    const keyword = req.query.search ? {
-        $or: [
-            { email: { $regex: req.query.search, $options: 'i' } },
-            // { email: { $regex: req.query.search, $options: 'i' } }
-        ]
-    } : {};
-
-    const result = await Users.find(keyword).find({ _id: { $ne: req.user.id } });
+  const { search } = req.query;
+  let result = [];
+  if (search) {
+    result = await Users.find({
+      email: { $regex: search, $options: 'i' },
+    }).select('-password');
+  }
     res.status(200).json(result);
 };
 
