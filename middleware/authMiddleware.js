@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
 
 const protect = async (req, res, next) => {
+    // if mode is developement then skip the auth
+    if (process.env.NODE_ENV === 'development') {
+        return next();
+    }
   let token;
 
   // Check if the token is present in cookies
