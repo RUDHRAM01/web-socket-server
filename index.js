@@ -6,8 +6,10 @@ const chats = require('./data/data');
 const db = require('./db/db');
 const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
+const messageRouter = require('./routes/messageRoutes')
 const {notFound} = require('./middleware/errorMiddleware');
-const {errorHandler} = require('./middleware/errorMiddleware');
+const { errorHandler } = require('./middleware/errorMiddleware');
+
 
 require('dotenv').config();
 
@@ -19,6 +21,7 @@ app.options('*', cors());
 
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
+app.use('/api/message', messageRouter);
 app.use(notFound);
 app.use(errorHandler);
 app.listen(4000, () => {
