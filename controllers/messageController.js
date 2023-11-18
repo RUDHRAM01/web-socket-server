@@ -5,8 +5,7 @@ const Message = require('../models/MessageModel');
 
 const sendMessage = asyncHandler(async (req, res) => {
     const { message, chatId } = req.body;
-    const userId = req.user._id;
-    const user = await User.findById(userId);
+    const userId = req.user._id
     const chat = await Chat.findById(chatId);
     if (!chat) {
         return res.status(404).json({ msg: 'Chat not found' });
@@ -25,8 +24,21 @@ const sendMessage = asyncHandler(async (req, res) => {
 });
 
 
+const allMessages = asyncHandler(async (req, res) => {
+    const { chatId } = req.params;
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+        return res.status(404).json({ msg: 'Chat not found' });
+    }
+    const messages = await Message.find({ chat: chatId })
+        .populate('sender', 'name')
+        .sort({ createdAt: -1 });
+    res.status(200).json({ messages });
+});
 
 
 
 
-module.exports = { sendMessage };
+
+
+module.exports = { sendMessage, allMessages };
