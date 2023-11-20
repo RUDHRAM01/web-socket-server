@@ -5,6 +5,7 @@ const { json } = require('body-parser');
 
 const accessChat = asyncHandler(async (req, res) => {
     const { userId } = req.body;
+    console.log("userId : ",userId," req.id : ",req.user._id)
     
     if (!userId) {
         console.log('No user id');
@@ -23,9 +24,9 @@ const accessChat = asyncHandler(async (req, res) => {
         path: "latestMessage.sender",
         select: "email profilePic email"
     });
-
+    
     if (isChat.length > 0) {
-        res.send(isChat[0]);
+        res.send(isChat);
     } else {
         var chatData = {
             chatName: "sender",
