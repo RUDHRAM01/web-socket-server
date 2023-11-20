@@ -27,7 +27,9 @@ userRouter.post('/register', userController.register);
 
 userRouter.post('/login', loginLimiter, userController.login);
 
-userRouter.get('/allusers',protect, userController.allUser);
+userRouter.get('/search', protect, userController.searchUser);
+
+userRouter.get('/allusers', protect, userController.allUsers);
 // userRouter.post('/logout', logoutLimiter, userController.logout);
 
 module.exports = userRouter;
