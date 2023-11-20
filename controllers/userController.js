@@ -201,8 +201,9 @@ const searchUser = async (req, res) => {
 
 // all users
 const allUsers = async (req, res) => {
-  try {
-      const users = await Users.find({}).select('-password');
+    try {
+        // in this it should return all the users except the logged in user
+    const users = await Users.find({ _id: { $ne: req.user._id } }).select('-password');
       
     res.status(200).json(users);
   } catch (err) {
