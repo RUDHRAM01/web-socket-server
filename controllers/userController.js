@@ -102,8 +102,10 @@ const { generateToken } = require('../db/token');
   
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+    const { name, email, password } = req.body;
+    console.log(name,email,password);
+    
+  if (!email || !password || !name) {
       return res.status(400).json({ msg: 'Please enter all fields' });
   }
 
@@ -120,6 +122,7 @@ const register = async (req, res) => {
       else {
           const hashPass = await bcrypt.hash(password, 10);
           const newUser = new Users({
+              name,
               email,
               password : hashPass
           });
@@ -183,21 +186,35 @@ const login = async (req, res) => {
 
 
 // /api/users?search=name
-const allUser = async (req, res) => {
+const searchUser = async (req, res) => {
   const { search } = req.query;
   let result = [];
   if (search) {
     result = await Users.find({
-      email: { $regex: search, $options: 'i' },
+      name: { $regex: search, $options: 'i' },
     }).select('-password');
+  } else {
+    result = await Users.find({}).select('-password');
   }
     res.status(200).json(result);
+};
+
+// all users
+const allUsers = async (req, res) => {
+  try {
+      const users = await Users.find({}).select('-password');
+      
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 };
 
 
 module.exports = {
     register,
     login,
-    allUser
+    searchUser,
+    allUsers
 };
 
