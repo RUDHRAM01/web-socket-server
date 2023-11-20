@@ -5,7 +5,6 @@ const { json } = require('body-parser');
 
 const accessChat = asyncHandler(async (req, res) => {
     const { userId } = req.body;
-    console.log("userId : ",userId," req.id : ",req.user._id)
     
     if (!userId) {
         console.log('No user id');
@@ -35,7 +34,6 @@ const accessChat = asyncHandler(async (req, res) => {
         try {
             const createChat = await Chat.create(chatData);
             const fullChat = await Chat.findOne({ _id: createChat._id }).populate('users', "-password");
-            console.log(fullChat)
             res.status(200).json(fullChat);
         } catch (err) {
             console.log(err);
@@ -54,7 +52,7 @@ const fetchChats = asyncHandler(async (req, res) => {
             select: "email profilePic email"
         });
 
-            res.status(200).json(fullChat);
+        res.status(200).json(fullChat);
     } catch (err) {
         console.log(err);
         res.status(400).json(err);
