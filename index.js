@@ -9,9 +9,6 @@ const chatRouter = require('./routes/ChatRoutes');
 const messageRouter = require('./routes/messageRoutes')
 const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
-
-
-
 require('dotenv').config();
 
 app.use(cors());
@@ -39,9 +36,9 @@ const io = require('socket.io')(server, {
 
 io.on('connection', (socket) => {
     console.log("connected to socket.io");
-    socket.on("setup", userData => {
-        socket.join(userData.id);
-        console.log(userData.id);
+    socket.on("setup", id => {
+        socket.join(id);
+        console.log(id);
         socket.emit("connected");
     });
 
