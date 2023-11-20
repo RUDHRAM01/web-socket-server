@@ -68,7 +68,6 @@ const protect = async (req, res, next) => {
         
         // Add user data to the request object
         req.user = await User.findById(decoded.id).select('-password');
-        console.log("from protect : ",req.user);
         
         next(); // Proceed to the next middleware
     } catch (err) {
