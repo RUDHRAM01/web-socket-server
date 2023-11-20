@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
     },
     profilePic: {
         type: String,
-        default: '/img/download.jpg'
+        default: 'https://th.bing.com/th?id=OIP._6kSqsTmX5o4yeSjGnw48AHaLH&w=204&h=306&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2'
     },
     password: {
         type: String,
