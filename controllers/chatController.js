@@ -12,21 +12,20 @@ const accessChat = asyncHandler(async (req, res) => {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
 
-    var isChat = await Chat.find({ 
+    var isChat = await Chat.findOne({ 
         isGroupChat: false,
         $and: [
             { users: { $elemMatch: { $eq: userId } } },
             { users: { $elemMatch: { $eq: req.user._id } } }
         ]
      }).populate('users',"-password").populate("latestMessage");
-
-    isChat = await User.populate(isChat, {
-        path: "latestMessage.sender",
-        select: "email profilePic email"
-    });
     
-    if (isChat.length > 0) {
-        res.send(isChat);
+    if (isChat) {
+        isChat = await User.populate(isChat, {
+            path: "latestMessage.sender",
+            select: "email profilePic email"
+        });
+        res.status(200).json(isChat);
     } else {
         var chatData = {
             chatName: "sender",
@@ -35,9 +34,8 @@ const accessChat = asyncHandler(async (req, res) => {
         };
         try {
             const createChat = await Chat.create(chatData);
-
             const fullChat = await Chat.findOne({ _id: createChat._id }).populate('users', "-password");
-            
+            console.log(fullChat)
             res.status(200).json(fullChat);
         } catch (err) {
             console.log(err);
