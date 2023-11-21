@@ -20,6 +20,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     });
     chat.latestMessage = newMessage._id;
     await chat.save();
+    console.log(newMessage, "new message")
     res.status(201).json({ msg: 'Message sent successfully', newMessage });
 });
 
@@ -31,9 +32,9 @@ const allMessages = asyncHandler(async (req, res) => {
         return res.status(404).json({ msg: 'Chat not found' });
     }
     const messages = await Message.find({ chat: chatId })
-        .populate('sender', 'name')
-        .sort({ createdAt: -1 });
-    res.status(200).json({ messages });
+    .populate('sender', 'name')
+    .sort({ createdAt: 1 }); 
+res.status(200).json({ messages });
 });
 
 
