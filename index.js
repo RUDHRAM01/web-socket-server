@@ -19,7 +19,7 @@ app.options('*', cors());
 
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
-app.use('/api/message', messageRouter);
+app.use('/api/messages', messageRouter);
 app.use(notFound);
 app.use(errorHandler);
 const server = app.listen(4000, () => {
