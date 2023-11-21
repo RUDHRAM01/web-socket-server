@@ -172,6 +172,8 @@ const login = async (req, res) => {
                       user: {
                           id: re[0]._id,
                           email: re[0].email,
+                          name: re[0].name,
+                          profilePic: re[0].profilePic,
                           token: generateToken(re[0]._id)
                       }
                   }
