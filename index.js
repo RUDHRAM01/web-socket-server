@@ -38,13 +38,11 @@ io.on('connection', (socket) => {
     console.log("connected to socket.io");
     socket.on("setup", id => {
         socket.join(id);
-        console.log(id);
         socket.emit("connected");
     });
 
     socket.on("join chat", room => {
         socket.join(room);
-        console.log("joined room",room);
         
     });
 
@@ -57,4 +55,14 @@ io.on('connection', (socket) => {
             socket.in(user._id).emit("message received", newMessageReceived);
         })
     })
+
+    socket.on("typing", room => {
+        console.log("typing",room);
+        socket.in(room).emit("typing");
+    });
+
+    socket.on("stopTy", room => {
+        console.log("stopTy",room);
+        socket.in(room).emit("stopTy");
+    });
 });
