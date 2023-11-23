@@ -8,7 +8,7 @@ const accessChat = asyncHandler(async (req, res) => {
     
     if (!userId) {
         console.log('No user id');
-        return res.status(400).json({ msg: 'Please enter all fields' });
+        return res.status(400).json({ msg: 'not found' });
     }
 
     var isChat = await Chat.findOne({ 
