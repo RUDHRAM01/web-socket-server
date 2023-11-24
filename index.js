@@ -35,7 +35,6 @@ const io = require('socket.io')(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log("connected to socket.io");
     socket.on("setup", id => {
         socket.join(id);
         socket.emit("connected");
@@ -57,12 +56,10 @@ io.on('connection', (socket) => {
     })
 
     socket.on("typing", room => {
-        console.log("typing",room);
-        socket.in(room).emit("typing");
+        socket.in(room).emit("typing",room);
     });
 
     socket.on("stopTy", room => {
-        console.log("stopTy",room);
-        socket.in(room).emit("stopTy");
+        socket.in(room).emit("stopTy",room);
     });
 });
