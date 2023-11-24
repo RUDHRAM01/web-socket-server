@@ -103,7 +103,7 @@ const { generateToken } = require('../db/token');
 
 const register = async (req, res) => {
     const { name, email, password } = req.body;
-    console.log(name,email,password);
+
     
   if (!email || !password || !name) {
       return res.status(400).json({ msg: 'Please enter all fields' });
@@ -140,7 +140,7 @@ const register = async (req, res) => {
                   }
               );
           } catch (err) {
-              console.log(err);
+              res.status(400).json({ err });
           }
          
       }
@@ -151,7 +151,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log(email,password);
+
   
   if (!email || !password) {
       return res.status(400).json({ msg: 'Please enter all fields' });
@@ -180,7 +180,7 @@ const login = async (req, res) => {
           }
       }
   } catch (err) {
-      console.log(err);
+      res.status(400).json({ err });
   }
 };
 
