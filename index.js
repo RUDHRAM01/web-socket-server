@@ -7,6 +7,7 @@ const db = require('./db/db');
 const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
 const messageRouter = require('./routes/messageRoutes')
+const Auth = require('./routes/Auth');
 const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
 require('dotenv').config();
@@ -17,9 +18,11 @@ app.options('*', cors());
 
 
 
+app.use('/api/auth',Auth);
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
 app.use('/api/messages', messageRouter);
+
 app.use(notFound);
 app.use(errorHandler);
 const server = app.listen(4000, () => {
