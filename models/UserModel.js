@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
         require: true,
         minlength: 6
     },
+    isAuthenticated: {
+        type: Boolean,
+        default: false
+    },
 
 }, { timestamps: true });
 
