@@ -24,7 +24,6 @@ const sendMessage = asyncHandler(async (req, res) => {
         ...newMessage._doc,
         users : chat.users
     }
-    console.log(newMessage, "new message")
     res.status(201).json({ msg: 'Message sent successfully', newMessage });
 });
 
