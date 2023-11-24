@@ -7,7 +7,6 @@ const accessChat = asyncHandler(async (req, res) => {
     const { userId } = req.body;
     
     if (!userId) {
-        console.log('No user id');
         return res.status(400).json({ msg: 'not found' });
     }
 
@@ -36,7 +35,7 @@ const accessChat = asyncHandler(async (req, res) => {
             const fullChat = await Chat.findOne({ _id: createChat._id }).populate('users', "-password");
             res.status(200).json(fullChat);
         } catch (err) {
-            console.log(err);
+            res.status(400).json(err);
         }
     }
 });
@@ -54,7 +53,6 @@ const fetchChats = asyncHandler(async (req, res) => {
 
         res.status(200).json(fullChat);
     } catch (err) {
-        console.log(err);
         res.status(400).json(err);
     }
 });
@@ -91,7 +89,6 @@ const renameGroup = asyncHandler(async (req, res) => {
         return res.status(400).json({ msg: "Please enter all details" });
     }
 
-    console.log(req.body);
     var chatId = req.body.chatId;
     var chatName = req.body.name;
 
