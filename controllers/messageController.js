@@ -2,9 +2,24 @@ const asyncHandler = require('express-async-handler')
 const User = require('../models/UserModel');
 const Chat = require('../models/ChatModel');
 const Message = require('../models/MessageModel');
+// const crypto = require('crypto');
 
+
+// const encryptionKey = process.env.ENCRYPTION_KEY;
+
+// function encrypt(text) {
+//     const iv = crypto.randomBytes(16);
+//     const key = crypto.createHash('sha256').update(encryptionKey).digest('base64').substr(0, 32);
+
+//     const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+//     let encrypted = cipher.update(text, 'utf-8', 'hex');
+//     encrypted += cipher.final('hex');
+//     return { encrypted, iv: iv.toString('hex') };
+// }
+  
 const sendMessage = asyncHandler(async (req, res) => {
-    const { message, chatId } = req.body;
+    const { message, chatId ,iv } = req.body;
+    
     const userId = req.user._id
     const chat = await Chat.findById(chatId).populate('users');
     if (!chat) {
@@ -16,7 +31,8 @@ const sendMessage = asyncHandler(async (req, res) => {
     let newMessage = await Message.create({
         sender: userId,
         chat: chatId,
-        content : message
+        content: message,
+        iv: iv
     });
     chat.latestMessage = newMessage._id;
     await chat.save();
