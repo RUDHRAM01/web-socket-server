@@ -9,6 +9,10 @@ const MessageSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    iv: {
+        type: String,
+        trim: true
+    },
     chat: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Chat'
