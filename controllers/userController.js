@@ -113,12 +113,12 @@ const sendVerifyMail = (email, id) => {
                 port: 465,
                 secure: false,
                 requireTLS: true,
-                user: 'rudhramsaraswat1112@gmail.com',
+                user: 'noreplychat.rs@gmail.com',
                 pass: process.env.EMAIL_PASSWORD
             }
         });
         const mailOptions = {
-            from: 'rudhramsaraswat1112@gmail.com',
+            from: 'noreplychat.rs@gmail.com',
             to: email,
             subject: 'Verify your email',
             html: `
