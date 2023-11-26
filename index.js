@@ -14,7 +14,9 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
-    "https://chat-app-rs.netlify.app/", // Netlify domain
+    "https://chat-app-rs.netlify.app", // Netlify domain
+    /google\.app$/,
+    /chat-app-rs.netlify\.app$/
   ];
 app.use(cors({
     origin: allowedOrigins,
