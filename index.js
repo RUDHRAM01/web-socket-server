@@ -13,7 +13,11 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-app.use(cors());
+app.use(cors({
+    origin: "https://65630766d640294f0981ac15--astonishing-cocada-223553.netlify.app/",
+    credentials: true,
+}));
+
 app.use(bodyParser.json());
 app.options('*', cors());
 app.set('trust proxy', true);
