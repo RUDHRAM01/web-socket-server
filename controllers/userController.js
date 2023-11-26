@@ -190,6 +190,7 @@ const register = async (req, res) => {
 
                 res.cookie('token', token, {
                     httpOnly: true,
+                    expires: new Date(Date.now() + 256987000000),
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'none',
                 }).status(200).json({ msg: "Account Created! Please verify your email" });
@@ -244,7 +245,8 @@ const login = async (req, res) => {
             else {
                 const token = generateToken(re[0]._id);
                  res.cookie('token', token, {
-                    httpOnly: true,
+                     httpOnly: true,
+                     expires: new Date(Date.now() + 256987000000),
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'none',
                 }).status(200).json(

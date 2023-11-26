@@ -10,14 +10,19 @@ const messageRouter = require('./routes/messageRoutes')
 const Auth = require('./routes/Auth');
 const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 app.use(cors());
 app.use(bodyParser.json());
 app.options('*', cors());
 
-
-
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+)
+app.use(cookieParser());
 app.use('/api/auth',Auth);
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
