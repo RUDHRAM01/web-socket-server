@@ -244,23 +244,22 @@ const login = async (req, res) => {
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
                 const token = generateToken(re[0]._id);
-                
-                 res.cookie('token', token, {
-                     httpOnly: true,
-                     expires: 3600,
+                const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
+                const expirationDate = new Date(Date.now() + thirtyDaysInSeconds * 1000);
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    expires: expirationDate,
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'none',
-                }).status(200).json(
-                    {
-                        user: {
-                            id: re[0]._id,
-                            email: re[0].email,
-                            name: re[0].name,
-                            profilePic: re[0].profilePic,
-                        }
+                }).status(200).json({
+                    user: {
+                        id: re[0]._id,
+                        email: re[0].email,
+                        name: re[0].name,
+                        profilePic: re[0].profilePic,
                     }
+                });
 
-                );
             }
         }
     } catch (err) {
