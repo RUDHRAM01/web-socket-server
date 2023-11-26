@@ -264,10 +264,11 @@ const searchUser = async (req, res) => {
     let result = [];
     if (search) {
         result = await Users.find({
-            name: { $regex: search, $options: 'i' },
+            name: { $regex: search, $options: 'r' },
+            _id: { $ne: req.user._id }
         }).select('-password');
     } else {
-        result = await Users.find({}).select('-password');
+        result = await Users.find({ _id: { $ne: req.user._id } }).select('-password');
     }
     res.status(200).json(result);
 };
