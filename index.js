@@ -12,9 +12,12 @@ const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
-
+const allowedOrigins = [
+    "http://localhost:3000", // Your local development environment
+    "https://65630766d640294f0981ac15--astonishing-cocada-223553.netlify.app", // Netlify domain
+  ];
 app.use(cors({
-    origin: "https://65630766d640294f0981ac15--astonishing-cocada-223553.netlify.app/",
+    origin: allowedOrigins,
     credentials: true,
 }));
 
