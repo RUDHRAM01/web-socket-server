@@ -188,12 +188,7 @@ const register = async (req, res) => {
                 const savedUser = await newUser.save();
                 sendVerifyMail(email, savedUser._id);
 
-                res.cookie('token', token, {
-                    httpOnly: true,
-                    expires: new Date(Date.now() + 256987000000),
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'none',
-                }).status(200).json({ msg: "Account Created! Please verify your email" });
+                res.status(200).json({ msg: "Account Created! Please verify your email" });
 
             } catch (err) {
                 res.status(400).json({ err });
@@ -244,19 +239,13 @@ const login = async (req, res) => {
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
                 const token = generateToken(re[0]._id);
-                const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
-                const expirationDate = new Date(Date.now() + thirtyDaysInSeconds * 1000);
-                res.cookie('token', token, {
-                    httpOnly: true,
-                    expires: expirationDate,
-                    secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'none',
-                }).status(200).json({
+                res.status(200).json({
                     user: {
                         id: re[0]._id,
                         email: re[0].email,
                         name: re[0].name,
                         profilePic: re[0].profilePic,
+                        token: token
                     }
                 });
 
