@@ -225,7 +225,6 @@ const verify = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    console.log("yoo");
     const { email, password } = req.body;
 
 
@@ -245,7 +244,7 @@ const login = async (req, res) => {
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
                 const token = generateToken(re[0]._id);
-                console.log(token);
+                
                  res.cookie('token', token, {
                      httpOnly: true,
                      expires: 3600,
@@ -265,6 +264,7 @@ const login = async (req, res) => {
             }
         }
     } catch (err) {
+        console.log(err)
         res.status(400).json({ err });
     }
 };
