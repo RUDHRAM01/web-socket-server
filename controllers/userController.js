@@ -246,7 +246,7 @@ const login = async (req, res) => {
                 const token = generateToken(re[0]._id);
                  res.cookie('token', token, {
                      httpOnly: true,
-                     expires: new Date(Date.now() + 256987000000),
+                     expires: 3600,
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'none',
                 }).status(200).json(
