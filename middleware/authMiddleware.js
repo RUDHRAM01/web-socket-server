@@ -7,13 +7,11 @@ const protect = async (req, res, next) => {
     //     return next();
     // }
   let token;
-  console.log(req.cookies.token);
-  console.log(req.cookie.token);
   // Check if the token is present in cookies
   if (req.cookies && req.cookies.token) {
     token = req.cookies.token;
   }
-
+  console.log(token)
   // No token found
   if (!token) {
     return res.status(401).json({ msg: 'Not authorized' });
@@ -25,7 +23,7 @@ const protect = async (req, res, next) => {
 
     // Add user data to the request object
     req.user = await User.findById(decoded.id).select('-password');
-
+    console.log(req.user)
     next(); // Proceed to the next middleware
   } catch (err) {
     console.error(err);
