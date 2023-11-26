@@ -21,7 +21,17 @@ const allowedOrigins = [
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS'
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: [
+		'Content-Type',
+		'Authorization',
+		'Set-Cookie',
+		'x-app-type',
+		'x-hashed-id',
+		'x-request-id',
+		'x-request-token',
+		'x-fingerprint-id',
+	],
 }));
 
 app.use(bodyParser.json());
