@@ -25,7 +25,7 @@ const logoutLimiter = rateLimit({
 
 userRouter.post('/register', userController.register);
 
-userRouter.post('/login', loginLimiter, userController.login);
+userRouter.post('/login', userController.login);
 
 userRouter.get('/search', protect, userController.searchUser);
 
