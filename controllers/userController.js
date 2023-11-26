@@ -167,9 +167,9 @@ const register = async (req, res) => {
         return res.status(400).json({ msg: 'Please enter all fields' });
     }
 
-    const regex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,20}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!regex.test(password)) {
-        return res.status(400).json({ msg: 'Password must be at least 6 characters and should contain a number and a special character' });
+        return res.status(400).json({ msg: 'Password must contain at least one lowercase letter, one uppercase letter, and one digit.' });
     }
 
     try {
@@ -180,13 +180,20 @@ const register = async (req, res) => {
             const newUser = new Users({
                 name,
                 email,
-                password : await bcrypt.hash(password, 10),
+                password: await bcrypt.hash(password, 10),
             });
 
             try {
+                const token = generateToken(newUser._id);
                 const savedUser = await newUser.save();
                 sendVerifyMail(email, savedUser._id);
-                res.status(200).json({ msg: "Account Created! Please verify your email" });
+
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'none',
+                }).status(200).json({ msg: "Account Created! Please verify your email" });
+
             } catch (err) {
                 res.status(400).json({ err });
             }
@@ -230,19 +237,23 @@ const login = async (req, res) => {
             return res.status(400).json({ msg: "Please verify your email" })
         }
         if (re.length === 0)
-            return res.status(400).json({ msg: 'Invalid credentials'});
+            return res.status(400).json({ msg: 'Invalid credentials' });
         else {
             const isMatch = await bcrypt.compare(password, re[0].password);
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
-                res.status(200).json(
+                const token = generateToken(re[0]._id);
+                 res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'none',
+                }).status(200).json(
                     {
                         user: {
                             id: re[0]._id,
                             email: re[0].email,
                             name: re[0].name,
                             profilePic: re[0].profilePic,
-                            token: generateToken(re[0]._id)
                         }
                     }
 
