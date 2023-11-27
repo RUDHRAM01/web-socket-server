@@ -36,7 +36,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.options('*', cors());
-app.set('trust proxy', ['13.228.225.19', '18.142.128.26', '54.254.162.138']);
+app.set('trust proxy', true);
 app.use(
     express.urlencoded({
         extended: true,
