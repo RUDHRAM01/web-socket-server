@@ -256,7 +256,6 @@ const login = async (req, res) => {
                     expires: expirationDate,
                     secure: process.env.NODE_ENV === 'production',
                     sameSite: 'None',
-                    domain: '.netlify.app'
                 }).status(200).json({
                     user: {
                         id: re[0]._id,
