@@ -1,65 +1,66 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const chats = require('./data/data');
+const cookieParser = require('cookie-parser');
 const db = require('./db/db');
 const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
-const messageRouter = require('./routes/messageRoutes')
+const messageRouter = require('./routes/messageRoutes');
 const Auth = require('./routes/Auth');
-const {notFound} = require('./middleware/errorMiddleware');
+const { notFound } = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
-const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
+
+const app = express();
+const port = 4000;
+
 const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
     "https://chat-app-rs.netlify.app", // Netlify domain
-    /google\.app$/,
-    /chat-app-rs.netlify\.app$/
-  ];
+    "https://socket-beie.onrender.com", // Your Render domain
+];
+
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: [
-		'Content-Type',
-		'Authorization',
-		'Set-Cookie',
-		'x-app-type',
-		'x-hashed-id',
-		'x-request-id',
-		'x-request-token',
-		'x-fingerprint-id',
-	],
+        'Content-Type',
+        'Authorization',
+        'Set-Cookie',
+        'x-app-type',
+        'x-hashed-id',
+        'x-request-id',
+        'x-request-token',
+        'x-fingerprint-id',
+    ],
 }));
 
 app.use(bodyParser.json());
-app.options('*', cors());
+app.options('*', cors()); // Pre-flight request handling
 app.set('trust proxy', ['13.228.225.19', '18.142.128.26', '54.254.162.138']);
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-)
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/api/auth',Auth);
+
+app.use('/api/auth', Auth);
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
 app.use('/api/messages', messageRouter);
 
 app.use(notFound);
 app.use(errorHandler);
-const server = app.listen(4000, () => {
-    console.log('Server is running on port 4000');
+
+const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
     db();
 });
 
 const io = require('socket.io')(server, {
-    pingTimeout : 60000,
+    pingTimeout: 60000,
     cors: {
         origin: allowedOrigins,
-    }
+    },
 });
 
 io.on('connection', (socket) => {
