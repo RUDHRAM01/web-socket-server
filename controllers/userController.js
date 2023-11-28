@@ -250,7 +250,7 @@ const login = async (req, res) => {
                 // });
                 const thirtyDaysInSeconds = 30 * 24 * 60 * 60; // 30 days in seconds
                 const expirationDate = new Date(Date.now() + thirtyDaysInSeconds * 1000);
-
+                console.log(process.env.NODE_ENV === 'production')
                 res.cookie('token', token, {
                     httpOnly: true,
                     expires: expirationDate,
