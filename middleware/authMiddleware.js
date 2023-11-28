@@ -8,7 +8,7 @@ const protect = async (req, res, next) => {
   // }
 
     let token;
-    console.log(req)
+    console.log(req.cookies)
 
   // Check if the token is present in cookies
   if (req.cookies && req.cookies.token) {
