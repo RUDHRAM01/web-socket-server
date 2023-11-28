@@ -255,7 +255,7 @@ const login = async (req, res) => {
                     httpOnly: true,
                     expires: expirationDate,
                     secure: process.env.NODE_ENV === 'production',
-                    sameSite: 'none',
+                    sameSite: 'None',
                 }).status(200).json({
                     user: {
                         id: re[0]._id,
