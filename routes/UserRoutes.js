@@ -1,7 +1,12 @@
 const userRouter = require('express').Router();
 const userController = require('../controllers/userController');
-const {protect} = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 const rateLimit = require('express-rate-limit');
+const multer = require('multer');
+const { memoryStorage } = require('multer');
+
+const storage = memoryStorage();
+const upload = multer({ storage: storage });
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -31,5 +36,9 @@ userRouter.get('/search', protect, userController.searchUser);
 
 userRouter.get('/allusers', protect, userController.allUsers);
 // userRouter.post('/logout', logoutLimiter, userController.logout);
+
+userRouter.post('/uploadImg', protect, upload.single('img'), userController.uploadImg);
+
+userRouter.post('/updateName', protect, userController.updateName);
 
 module.exports = userRouter;
