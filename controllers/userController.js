@@ -4,6 +4,7 @@ const cookie = require('cookie');
 const { generateToken } = require('../db/token');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
+const  uploadToS3  = require('../S3');
 
 
 
@@ -279,12 +280,40 @@ const allUsers = async (req, res) => {
     try {
         // in this it should return all the users except the logged in user
         const users = await Users.find({ _id: { $ne: req.user._id } }).select('-password');
-
         res.status(200).json(users);
     } catch (err) {
         res.status(400).json(err);
     }
 };
+
+//upload Img
+const uploadImg = async (req, res) => {
+    try {
+        const { file } = req;
+        if (!file) return res.status(400).json({ msg: 'No image uploaded' });
+        const s3Url = await uploadToS3({ file, userId: req.user._id });
+
+        const user = await Users.findByIdAndUpdate(req.user._id, { profilePic: s3Url }, { new: true });
+        res.status(200).json(user);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+}
+
+// update Name
+const updateName = async (req, res) => {
+    try {
+        const { name } = req.body;
+        if (!name) return res.status(400).json({ msg: 'No name entered' });
+        if(name[0] === ' ') return res.status(400).json({ msg: 'enter valid name' });
+        const user = await Users.findByIdAndUpdate(req.user._id, { name }, { new: true });
+        res.status(200).json(user);
+    } catch (err) {
+        console.log(err);
+        res.status(400).json(err);
+    }
+}
 
 
 module.exports = {
@@ -292,6 +321,8 @@ module.exports = {
     login,
     searchUser,
     allUsers,
-    verify
+    verify,
+    uploadImg,
+    updateName
 };
 
