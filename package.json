@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.470.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cookie": "^0.6.0",
@@ -23,7 +24,9 @@
     "express-rate-limit": "^6.8.1",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
-    "socket.io": "^4.7.1"
+    "socket.io": "^4.7.1",
+    "uuid": "^9.0.1"
   }
 }
