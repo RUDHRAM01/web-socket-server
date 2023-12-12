@@ -349,10 +349,13 @@ const searchUser = async (req, res) => {
         result = await Users.find({
             name: { $regex: search, $options: 'i' },
             _id: { $ne: req.user._id },
-            isAuthenticated : true
+            isAuthenticated: { $ne: false },
         }).select('-password');
     } else {
-        result = await Users.find({ _id: { $ne: req.user._id } }).select('-password');
+        result = await Users.find({
+            _id: { $ne: req.user._id },
+            isAuthenticated: { $ne: false }
+          }).select('-password');
     }
     res.status(200).json(result);
 };
@@ -362,7 +365,11 @@ const searchUser = async (req, res) => {
 const allUsers = async (req, res) => {
     try {
         // in this it should return all the users except the logged in user
-        const users = await Users.find({ _id: { $ne: req.user._id } }).select('-password');
+        const users = await Users.find({
+            _id: { $ne: req.user._id },
+            isAuthenticated: { $ne: false }
+          }).select('-password');
+          
         res.status(200).json(users);
     } catch (err) {
         res.status(400).json(err);
