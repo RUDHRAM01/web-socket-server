@@ -14,7 +14,8 @@ const Limiter = rateLimit({
   },
 });
 
-router.get("/verify",Limiter, userController.verify);
+router.get("/verify", Limiter, userController.verify);
+router.get("/updatePassword", Limiter, userController.verifyPassword);
 
 
 module.exports = router;
