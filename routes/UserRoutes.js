@@ -31,10 +31,14 @@ const logoutLimiter = rateLimit({
 
 const uploadLimiter = rateLimit({
   windowMs: 30 * 24 * 60 * 60 * 1000, // 30 days
-  max: 5, // Limit each IP to 5 requests per windowMs
+  max: 5, // Limit each user to 5 requests per windowMs
+  keyGenerator: (req) => {
+    // Assuming you have a way to identify users, use their ID as the key
+    return req.user ? req.user._id : req.ip;
+  },
   handler: (req, res) => {
-    res.status(429).json({
-      msg: 'Too many attempts from this IP, please try again later.',
+    return res.status(429).json({
+      msg: 'Too many attempts from this user, please try again later.',
     });
   },
 });
