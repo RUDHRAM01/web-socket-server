@@ -14,7 +14,7 @@ const loginLimiter = rateLimit({
   max: 10, // Limit each IP to 10 requests per windowMs
   handler: (req, res) => {
     res.status(429).json({
-      error: 'Too many attempts from this IP, please try again later.',
+      msg: 'Too many requests from this IP, please try again later.',
     });
   },
 });
@@ -24,25 +24,20 @@ const logoutLimiter = rateLimit({
   max: 5, // Limit each IP to 5 requests per windowMs
   handler: (req, res) => {
     res.status(429).json({
-      error: 'Too many logout attempts from this IP, please try again later.',
+      msg: 'Too many requests from this IP, please try again later.',
     });
   },
 });
 
 const uploadLimiter = rateLimit({
-  windowMs: 30 * 24 * 60 * 60 * 1000, // 30 days
-  max: 5, // Limit each user to 5 requests per windowMs
-  keyGenerator: (req) => {
-    // Assuming you have a way to identify users, use their ID as the key
-    return req.user ? req.user._id : req.ip;
-  },
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 2, // Limit each IP to 10 requests per windowMs
   handler: (req, res) => {
-    return res.status(429).json({
-      msg: 'Too many attempts from this user, please try again later.',
+    res.status(429).json({
+      msg: 'Too many requests from this IP, please try again later.',
     });
   },
 });
-
 
 
 userRouter.post('/register', userController.register);
