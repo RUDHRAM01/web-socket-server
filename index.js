@@ -6,10 +6,12 @@ const chats = require('./data/data');
 const db = require('./db/db');
 const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
-const messageRouter = require('./routes/messageRoutes')
+const messageRouter = require('./routes/messageRoutes');
+const StatusRouter = require('./routes/StatusRoutes');
 const Auth = require('./routes/Auth');
 const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
+const limitTracker = require('./middleware/AuthLimiter');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const allowedOrigins = [
@@ -44,9 +46,10 @@ app.use(
 )
 app.use(cookieParser());
 app.use('/api/auth',Auth);
-app.use('/api/users', userRouter);
-app.use('/api/chats', chatRouter);
-app.use('/api/messages', messageRouter);
+app.use('/api/users',limitTracker, userRouter);
+app.use('/api/chats',limitTracker, chatRouter);
+app.use('/api/messages',limitTracker, messageRouter);
+app.use('/api/status',limitTracker, StatusRouter);
 
 app.use(notFound);
 app.use(errorHandler);
