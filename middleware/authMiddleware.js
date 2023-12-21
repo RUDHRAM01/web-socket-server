@@ -4,7 +4,15 @@ const {HeaderChecker} = require('./HeadersChecker');
 
 
 const protect = async (req, res, next) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'development') {
+        try {
+            // Assuming HeaderChecker is a middleware function
+            HeaderChecker(req, res, next);
+          } catch (err) {
+            return res.status(401).json({ msg: 'Something went wrong.' });
+        }
+    }
+
       try {
         let token;
   
@@ -31,14 +39,7 @@ const protect = async (req, res, next) => {
   
         return res.status(401).json({ msg: 'Not authorized. Token verification failed.' });
       }
-    } else {
-      try {
-        // Assuming HeaderChecker is a middleware function
-        HeaderChecker(req, res, next);
-      } catch (err) {
-        return res.status(401).json({ msg: 'Something went wrong.' });
-      }
-    }
+    
   };
   
 
