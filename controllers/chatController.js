@@ -53,7 +53,8 @@ const fetchChats = asyncHandler(async (req, res) => {
 
         res.status(200).json(fullChat);
     } catch (err) {
-        res.status(400).json(err);
+        console.log(err);
+        res.status(400).json({msg:"error while fetching chats"});
     }
 });
 
