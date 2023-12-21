@@ -43,7 +43,7 @@ const createStatus = async (req, res) => {
         const status = await Status.find({
            userId: { $in: friends },
             expirationDate: { $gte: currentDate },
-        }).populate('userId', 'name profilePic').select('-expirationDate -createdAt -updatedAt -__v');
+        }).populate('userId', 'name profilePic').select('-expirationDate -updatedAt -__v');
         // create a code in which we have to send same userids status in one array
         const statusObj = [];
         status.forEach((data) => {
