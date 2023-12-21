@@ -10,7 +10,8 @@ const protect = async (req, res,next) => {
         if (req.cookies && req.cookies.xxrsr) {
           token = req.cookies.xxrsr;
   
-          if (!token) {
+            if (!token) {
+              console.log("error : token for found")
             return res.status(401).json({ msg: 'Not authorized. Token not found.' });
           }
   
@@ -18,10 +19,12 @@ const protect = async (req, res,next) => {
             req.user = await User.findById(decoded.id).select('-password');
             next();
         } else {
+            console.log("error : cookies not found")
           // You may want to handle the case where the cookie is not present.
           return res.status(401).json({ msg: 'Not authorized. Token not provided.' });
         }
       } catch (err) {
+
         console.error(err);
   
         if (err.name === 'JsonWebTokenError' && err.message === 'jwt malformed') {
