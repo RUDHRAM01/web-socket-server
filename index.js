@@ -38,13 +38,13 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.options('*', cors());
+app.use(cookieParser());
 app.set('trust proxy', ['13.228.225.19', '18.142.128.26', '54.254.162.138']);
 app.use(
     express.urlencoded({
         extended: true,
     })
 )
-app.use(cookieParser());
 app.use('/api/auth',Auth);
 app.use('/api/users',limitTracker, userRouter);
 app.use('/api/chats',limitTracker, chatRouter);
