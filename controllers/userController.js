@@ -322,13 +322,14 @@ const login = async (req, res) => {
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
                 const token = generateToken(re[0]._id);
-                res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
+                // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
                 res.status(200).json({
                     user: {
                         id: re[0]._id,
                         name: re[0].name,
                         email: re[0].email,
-                        profilePic: re[0].profilePic
+                        profilePic: re[0].profilePic,
+                        token : token
                     },
                 });
             }
