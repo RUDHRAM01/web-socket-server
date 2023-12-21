@@ -9,10 +9,12 @@ const chatRouter = require('./routes/ChatRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const StatusRouter = require('./routes/StatusRoutes');
 const Auth = require('./routes/Auth');
+const {HeadersChecker} = require('./middleware/HeadersChecker');
 const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const limitTracker = require('./middleware/AuthLimiter');
 const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
@@ -46,10 +48,10 @@ app.use(
     })
 )
 app.use('/api/auth',Auth);
-app.use('/api/users',limitTracker, userRouter);
-app.use('/api/chats',limitTracker, chatRouter);
-app.use('/api/messages',limitTracker, messageRouter);
-app.use('/api/status',limitTracker, StatusRouter);
+app.use('/api/users',[limitTracker,HeadersChecker], userRouter);
+app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
+app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
+app.use('/api/status',[limitTracker,HeadersChecker], StatusRouter);
 
 app.use(notFound);
 app.use(errorHandler);

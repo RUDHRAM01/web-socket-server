@@ -1,20 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
-const {HeaderChecker} = require('./HeadersChecker');
 
 
-const protect = async (req, res) => {
-    if (process.env.NODE_ENV !== 'development') {
-        console.log("yes checking...");
-        try {
-            // Assuming HeaderChecker is a middleware function
-            HeaderChecker(req, res);
-          } catch (err) {
-            return res.status(401).json({ msg: 'Something went wrong.' });
-        }
-    }
-    console.log("no checking...");
 
+const protect = async (req, res,next) => {
       try {
         let token;
   
@@ -26,8 +15,8 @@ const protect = async (req, res) => {
           }
   
           const decoded = jwt.verify(token, process.env.JWT_SECRET);
-          req.user = await User.findById(decoded.id).select('-password');
-         
+            req.user = await User.findById(decoded.id).select('-password');
+            next();
         } else {
           // You may want to handle the case where the cookie is not present.
           return res.status(401).json({ msg: 'Not authorized. Token not provided.' });

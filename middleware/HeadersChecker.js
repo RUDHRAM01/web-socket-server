@@ -1,5 +1,7 @@
 const CryptoJS = require('crypto-js');
 const HeadersChecker = (req, res, next) => {   
+    if (process.env.NODE_ENV === 'development') return next();
+    
     if (!req.headers['x-app-type']) {
         console.log("error 1");
         throw new Error('app type header not present');
