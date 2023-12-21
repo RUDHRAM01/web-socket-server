@@ -5,6 +5,7 @@ const {HeaderChecker} = require('./HeadersChecker');
 
 const protect = async (req, res, next) => {
     if (process.env.NODE_ENV !== 'development') {
+        console.log("yes checking...");
         try {
             // Assuming HeaderChecker is a middleware function
             HeaderChecker(req, res, next);
@@ -12,6 +13,7 @@ const protect = async (req, res, next) => {
             return res.status(401).json({ msg: 'Something went wrong.' });
         }
     }
+    console.log("no checking...");
 
       try {
         let token;
