@@ -3,23 +3,23 @@ const HeadersChecker = (req, res, next) => {
     if (process.env.NODE_ENV === 'development') return next();
     
     if (!req.headers['x-app-type']) {
-        throw new Error('app type header not present');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
         }
         
     if (req.headers['x-app-type'] !== 'RsRequest') {
-        throw new Error('app type header not valid');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
         }
     
     if (!req.headers['x-request-id']) {
-        throw new Error('request id header not present');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
         }
     
     if (!req.headers['x-hashed-id']) {
-        throw new Error('hashed id header not present');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
         }
     
     if (!req.headers['x-request-token']) {
-        throw new Error('request token header not present');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
         }
     
         const requestId = req.headers['x-request-id'];
@@ -28,7 +28,7 @@ const HeadersChecker = (req, res, next) => {
         const bytes = CryptoJS.AES.decrypt(hashedId, requestToken);
         const tok = bytes.toString(CryptoJS.enc.Utf8);
     if (requestId !== tok) {
-            throw new Error('hashed id header not valid');
+        return res.status(400).json({ msg: 'UnAuthorized Request 💻' });
     }
     next();
 }
