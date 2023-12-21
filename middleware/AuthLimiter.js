@@ -5,7 +5,7 @@ const limitTracker = rateLimit({
     max: 1000, // Limit each IP to 10 requests per windowMs
     handler: (req, res) => {
         res.status(429).json({
-            msg: 'Too many requests from this IP, please try again later.',
+            msg: 'Too many requests from this IP, please try again later. 🙂',
         });
     },
 });

@@ -47,11 +47,13 @@ app.use(
         extended: true,
     })
 )
+
 app.use('/api/auth',Auth);
 app.use('/api/users',[limitTracker,HeadersChecker], userRouter);
 app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
 app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
 app.use('/api/status',[limitTracker,HeadersChecker], StatusRouter);
+
 
 app.use(notFound);
 app.use(errorHandler);

@@ -16,7 +16,6 @@ const createStatus = async (req, res) => {
         const expirationDate = new Date(+new Date() + 1 * 24 * 60 * 60 * 1000);
         const s3Url = await uploadToS3({ file, userId: req.user._id });
         const status = await Status.create({ imageUrl: s3Url, color, userId, content, expirationDate });
-        console.log(status);
         return res.status(200).json({ msg: "Status created successfully" });
     } catch (error) {
         return res.status(500).json({ msg: error.message });
