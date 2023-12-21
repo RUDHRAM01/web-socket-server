@@ -5,7 +5,8 @@ const User = require('../models/UserModel');
 
 const protect = async (req, res,next) => {
       try {
-        let token;
+          let token;
+          
   
         if (req.cookies && req.cookies.xxrsr) {
           token = req.cookies.xxrsr;
@@ -19,6 +20,7 @@ const protect = async (req, res,next) => {
             req.user = await User.findById(decoded.id).select('-password');
             next();
         } else {
+            console.log(req.cookies,req.cookie)
             console.log("error : cookies not found")
           // You may want to handle the case where the cookie is not present.
           return res.status(401).json({ msg: 'Not authorized. Token not provided.' });
