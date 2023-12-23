@@ -74,7 +74,6 @@ const protect = async (req, res, next) => {
         
         next(); // Proceed to the next middleware
     } catch (err) {
-        console.error(err);
         if (err.name === 'JsonWebTokenError' && err.message === 'jwt malformed') {
             return res.status(401).json({ msg: 'Malformed token. Please provide a valid token.' });
         }

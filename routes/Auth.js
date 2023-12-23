@@ -9,7 +9,7 @@ const Limiter = rateLimit({
   max: 10, // Limit each IP to 10 requests per windowMs
   handler: (req, res) => {
     res.status(429).json({
-      error: 'Too many attempts from this IP, please try again later.',
+      msg : 'Too many attempts from this IP, please try again later.',
     });
   },
 });
