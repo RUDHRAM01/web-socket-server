@@ -14,6 +14,7 @@ const {notFound} = require('./middleware/errorMiddleware');
 const { errorHandler } = require('./middleware/errorMiddleware');
 const limitTracker = require('./middleware/AuthLimiter');
 const cookieParser = require('cookie-parser');
+const intiSocket = require('./socket');
 
 require('dotenv').config();
 const allowedOrigins = [
@@ -61,40 +62,4 @@ const server = app.listen(4000, () => {
     console.log('Server is running on port 4000');
     db();
 });
-
-const io = require('socket.io')(server, {
-    pingTimeout : 60000,
-    cors: {
-        origin: allowedOrigins,
-    }
-});
-
-io.on('connection', (socket) => {
-    socket.on("setup", id => {
-        socket.join(id);
-        socket.emit("connected");
-    });
-
-    socket.on("join chat", room => {
-        socket.join(room);
-        
-    });
-
-    socket.on("new message", (newMessageReceived) => {
-        var chat = newMessageReceived.chat;
-        if (!newMessageReceived.users) return console.log("Chat.users not defined");
-
-        newMessageReceived.users.forEach((user) => {
-            if (user._id === newMessageReceived.sender) return;
-            socket.in(user._id).emit("message received", newMessageReceived);
-        })
-    })
-
-    socket.on("typing", room => {
-        socket.in(room).emit("typing",room);
-    });
-
-    socket.on("stopTy", room => {
-        socket.in(room).emit("stopTy",room);
-    });
-});
+intiSocket(server, allowedOrigins);
