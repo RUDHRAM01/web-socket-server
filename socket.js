@@ -15,9 +15,16 @@ function initSocket(server, allowedOrigins) {
 
         socket.on("join chat", room => {
             socket.join(room);
-        
         });
 
+        socket.on("public room", (id) => {
+            socket.join("public");
+            socket.in("public").emit("connectedToPublic", id)
+        })
+
+        socket.on("offline", (id) => {
+            socket.in("public").emit("disconnectedToPublic", id);
+        })
         socket.on("new message", (newMessageReceived) => {
             var chat = newMessageReceived.chat;
             if (!newMessageReceived.users) return console.log("Chat.users not defined");
