@@ -1,46 +1,65 @@
-const SocketIo = require('socket.io')
+const SocketIo = require('socket.io');
+
+let sockets = {};
+const addUserToSocket = (socket, userId) => {
+    sockets[userId] = socket.id;
+}
+
+const removeUserFromSocket = (socketId) => {
+    Object.keys(sockets).forEach(key => {
+        if (sockets[key] === socketId) delete sockets[key];
+    })
+}
+
+const getUserSocket = (userId) => {
+    if (!sockets[userId]) return null;
+    return sockets[userId];
+}
+
+
 function initSocket(server, allowedOrigins) {
     const io = SocketIo(server, {
         pingTimeout: 60000,
         cors: {
             origin: allowedOrigins,
+            methods: ["GET", "POST"],
+            credentials: true
         }
+
     });
 
     io.on('connection', (socket) => {
-        socket.on("setup", id => {
-            socket.join(id);
-            socket.emit("connected");
+        socket.on("add", id => {
+            addUserToSocket(socket, id);
+            io.to(socket.id).emit("connected");
         });
 
-        socket.on("join chat", room => {
-            socket.join(room);
+        socket.on("disconnect", () => {
+            removeUserFromSocket(socket.id);
         });
 
-        socket.on("public room", (id) => {
-            socket.join("public");
-            socket.in("public").emit("connectedToPublic", id)
-        })
 
-        socket.on("offline", (id) => {
-            socket.in("public").emit("disconnectedToPublic", id);
-        })
         socket.on("new message", (newMessageReceived) => {
-            var chat = newMessageReceived.chat;
             if (!newMessageReceived.users) return console.log("Chat.users not defined");
 
             newMessageReceived.users.forEach((user) => {
                 if (user._id === newMessageReceived.sender) return;
-                socket.in(user._id).emit("message received", newMessageReceived);
+                const userSocket = getUserSocket(user._id);
+                if (!userSocket) return;
+                io.to(userSocket).emit("message received", newMessageReceived);
             })
         })
 
         socket.on("typing", room => {
-            socket.in(room).emit("typing", room);
+            const userSocket = getUserSocket(room.to);
+            if (!userSocket) return;
+            io.to(userSocket).emit("typing", room.room);
         });
 
         socket.on("stopTy", room => {
-            socket.in(room).emit("stopTy", room);
+            const userSocket = getUserSocket(room.to);
+            if (!userSocket) return;
+            io.to(userSocket).emit("stopTy", room.room);
         });
     })
     
