@@ -8,6 +8,7 @@ const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const StatusRouter = require('./routes/StatusRoutes');
+const NotificationRoute = require('./routes/NotificationRoutes');
 const Auth = require('./routes/Auth');
 const {HeadersChecker} = require('./middleware/HeadersChecker');
 const {notFound} = require('./middleware/errorMiddleware');
@@ -53,7 +54,8 @@ app.use('/api/auth',Auth);
 app.use('/api/users',[limitTracker,HeadersChecker], userRouter);
 app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
 app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
-app.use('/api/status',[limitTracker,HeadersChecker], StatusRouter);
+app.use('/api/status', [limitTracker, HeadersChecker], StatusRouter);
+app.use('/api/notifications', [limitTracker, HeadersChecker], NotificationRoute);
 
 
 app.use(notFound);
