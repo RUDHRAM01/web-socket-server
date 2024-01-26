@@ -138,7 +138,7 @@ const forgotEmailPassword = (email, id) => {
 
                 <h1 style="font-size:24px; font-family: Arial, sans-serif; color:#333333;">Welcome to Our Service!</h1>
                 <p style="font-size:16px; font-family: Arial, sans-serif; color:#666666; line-height:1.5;">Hello!</p>
-                <a href="https://socket-beie.onrender.com/api/auth/updatePassword?id=${iid}" style="display:inline-block; background-color:#28a745; color:#ffffff; text-decoration:none; padding:10px 20px; margin-top:20px; border-radius:4px; font-family: Arial, sans-serif;">Update Password</a>
+                <a href="https://web-server-plg9.onrender.com/api/auth/updatePassword?id=${iid}" style="display:inline-block; background-color:#28a745; color:#ffffff; text-decoration:none; padding:10px 20px; margin-top:20px; border-radius:4px; font-family: Arial, sans-serif;">Update Password</a>
             </td>
         </tr>
         
@@ -196,7 +196,7 @@ const sendVerifyMail = (email, id) => {
 
                 <h1 style="font-size:24px; font-family: Arial, sans-serif; color:#333333;">Welcome to Our Service!</h1>
                 <p style="font-size:16px; font-family: Arial, sans-serif; color:#666666; line-height:1.5;">Thank you for signing up for our service. We are excited to have you on board!</p>
-                <a href="https://socket-beie.onrender.com/api/auth/verify?id=${id}" style="display:inline-block; background-color:#28a745; color:#ffffff; text-decoration:none; padding:10px 20px; margin-top:20px; border-radius:4px; font-family: Arial, sans-serif;">Verify Email</a>
+                <a href="https://web-server-plg9.onrender.com/api/auth/verify?id=${id}" style="display:inline-block; background-color:#28a745; color:#ffffff; text-decoration:none; padding:10px 20px; margin-top:20px; border-radius:4px; font-family: Arial, sans-serif;">Verify Email</a>
             </td>
         </tr>
         
