@@ -1,6 +1,9 @@
 const SocketIo = require('socket.io');
+const NotificationModel = require("./models/NotificationModel")
+
 
 let sockets = {};
+let current = {};
 const addUserToSocket = (socket, userId) => {
     sockets[userId] = socket.id;
 }
@@ -16,8 +19,32 @@ const getUserSocket = (userId) => {
     return sockets[userId];
 }
 
+const addCurrentToSocket = (current, userId) => {
+    current[userId] = current;
+}
+
+const removeCurrentFromSocket = (userId) => {
+    delete current[userId];
+}
+
+const getCurrent = (userId) => {
+    if (!current[userId]) return null;
+    return current[userId];
+}
+
+const addNotification = (notificationData) => {
+    NotificationModel.create({
+        for: notificationData?.to,
+        from: notificationData?.from
+    })
+}
 
 function initSocket(server, allowedOrigins) {
+
+    if (!server) return console.log("Server not found");
+    if (!allowedOrigins) return console.log("Allowed origins not found");
+
+
     const io = SocketIo(server, {
         pingTimeout: 60000,
         cors: {
@@ -38,10 +65,21 @@ function initSocket(server, allowedOrigins) {
             removeUserFromSocket(socket.id);
         });
 
+        socket.on('receive notification', async (notificationData) => {
+            const userSocket = getUserSocket(notificationData.to);
+            if (!userSocket) {
+                return await addNotification(notificationData);
+            };
+            const currentSocket = getCurrent(notificationData.to);
+            if (notificationData.chat !== currentSocket) {
+                await addNotification(notificationData);
+                io.to(userSocket).emit("notification received");
+            }
+        })
 
         socket.on("new message", (newMessageReceived) => {
             if (!newMessageReceived.users) return console.log("Chat.users not defined");
-
+            console.log("new message received at the backend...")
             newMessageReceived.users.forEach((user) => {
                 if (user._id === newMessageReceived.sender) return;
                 const userSocket = getUserSocket(user._id);
@@ -49,6 +87,8 @@ function initSocket(server, allowedOrigins) {
                 io.to(userSocket).emit("message received", newMessageReceived);
             })
         })
+
+
 
         socket.on("typing", room => {
             const userSocket = getUserSocket(room.to);
@@ -62,7 +102,7 @@ function initSocket(server, allowedOrigins) {
             io.to(userSocket).emit("stopTy", room.room);
         });
     })
-    
+
 }
 
 module.exports = initSocket;
