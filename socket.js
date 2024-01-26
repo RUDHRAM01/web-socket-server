@@ -19,23 +19,25 @@ const getUserSocket = (userId) => {
     return sockets[userId];
 }
 
-const addCurrentToSocket = (current, userId) => {
-    current[userId] = current;
+const addCurrentToSocket = (curr, userId) => {
+    current[userId] = curr;
 }
 
-const removeCurrentFromSocket = (userId) => {
-    delete current[userId];
-}
 
 const getCurrent = (userId) => {
     if (!current[userId]) return null;
     return current[userId];
 }
 
+const removeCurrent = (userId) => {
+    delete current[userId];
+}
+
 const addNotification = (notificationData) => {
     NotificationModel.create({
         for: notificationData?.to,
-        from: notificationData?.from
+        from: notificationData?.from,
+        chatId: notificationData?.chat,
     })
 }
 
@@ -61,6 +63,14 @@ function initSocket(server, allowedOrigins) {
             io.to(socket.id).emit("connected");
         });
 
+        socket.on("updateCurrent", (data) => {
+            addCurrentToSocket(data.chatId, data.userId);
+        });
+
+        socket.on('disconnectCurr', (userId) => {
+            removeCurrent(userId);
+        })
+
         socket.on("disconnect", () => {
             removeUserFromSocket(socket.id);
         });
@@ -79,7 +89,6 @@ function initSocket(server, allowedOrigins) {
 
         socket.on("new message", (newMessageReceived) => {
             if (!newMessageReceived.users) return console.log("Chat.users not defined");
-            console.log("new message received at the backend...")
             newMessageReceived.users.forEach((user) => {
                 if (user._id === newMessageReceived.sender) return;
                 const userSocket = getUserSocket(user._id);
