@@ -10,9 +10,11 @@ const getNotifications = async (req, res) => {
 }  
 
 const deleteNotification = async (req, res) => {
+    
     try {
-        await Notification.findByIdAndUpdate(req.params.id, { seen: true });
-        res.status(200).json({ msg: "Notification deleted" });
+        await Notification.updateMany({ for: req.body.for, from: req.body.from }, { seen: true }) 
+        const notifications = await Notification.find({ for: req.user._id, seen: false }).populate('from', 'name profilePic');
+        res.status(200).json(notifications);
     } catch (err) {
         res.status(500).json({ msg: err.message });
     }
