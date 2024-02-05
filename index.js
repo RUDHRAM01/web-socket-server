@@ -43,7 +43,6 @@ app.use(cors({
 app.use(bodyParser.json());
 app.options('*', cors());
 app.use(cookieParser());
-app.set('trust proxy');
 app.use(
     express.urlencoded({
         extended: true,
