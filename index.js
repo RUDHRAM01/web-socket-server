@@ -43,7 +43,12 @@ app.use(cors({
 app.use(bodyParser.json());
 app.options('*', cors());
 app.use(cookieParser());
-
+app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal']);
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+)
 
 app.use('/api/auth',Auth);
 app.use('/api/users',[limitTracker,HeadersChecker], userRouter);
