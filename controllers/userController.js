@@ -78,7 +78,7 @@ const login = async (req, res) => {
             else {
                 const token = generateToken(re[0]._id);
                 // Set the token as a cookie
-                res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 256987000000), sameSite: 'none', secure: true })
+                res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 256987000000), sameSite: 'strict', secure: true })
 
                 res.status(200).json({
                     user: {
