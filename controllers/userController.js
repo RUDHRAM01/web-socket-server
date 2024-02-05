@@ -62,39 +62,48 @@ const jwt = require('jsonwebtoken');
 //     }
 //   };
 
-const login = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ msg: 'Please enter all fields' });
-    }
+//   const login = async (req, res) => {
+//     const { email, password } = req.body;
+//     console.log(email, password);
 
-    try {
-        const re = await Users.find({ email });
-        if (re.length === 0) return res.status(400).json('User does not exist');
-        else {
-            const isMatch = await bcrypt.compare(password, re[0].password);
-            if (!isMatch)
-                return res.status(400).json({ msg: 'Invalid credentials' });
-            else {
-                const token = generateToken(re[0]._id);
-                // Set the token as a cookie
-                res.cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + 256987000000) })
+//     if (!email || !password) {
+//       return res.status(400).json({ msg: 'Please enter all fields' });
+//     }
 
-                res.status(200).json({
-                    user: {
-                        id: re[0]._id,
-                        email: re[0].email,
-                        profilePic: re[0].profilePic,
-                        name: re[0].name,
-                        token : token
-                    },
-                });
-            }
-        }
-    } catch (err) {
-        console.log(err);
-    }
-};
+//     try {
+//       const re = await Users.find({ email });
+//       if (re.length === 0) return res.status(400).json('User does not exist');
+//       else {
+//         const isMatch = await bcrypt.compare(password, re[0].password);
+//         if (!isMatch)
+//           return res.status(400).json({ msg: 'Invalid credentials' });
+//         else {
+//           console.log('d');
+
+//           const token = generateToken(re[0]._id);
+
+//           // Set the token as a cookie
+//           res.setHeader(
+//             'Set-Cookie',
+//             cookie.serialize('token', token, {
+//               httpOnly: true,
+//               maxAge: 3600, // 1 hour (you can adjust the expiration time as needed)
+//               sameSite: 'strict',
+//             })
+//           );
+
+//           res.status(200).json({
+//             user: {
+//               id: re[0]._id,
+//               email: re[0].email,
+//             },
+//           });
+//         }
+//       }
+//     } catch (err) {
+//       console.log(err);
+//     }
+//   };
 
 // forgot password 
 const forgotEmailPassword = (email, id) => {
@@ -237,8 +246,10 @@ const register = async (req, res) => {
             });
 
             try {
+                const token = generateToken(newUser._id);
                 const savedUser = await newUser.save();
                 sendVerifyMail(email, savedUser._id);
+
                 res.status(200).json({ msg: "Account Created! Please verify your email" });
 
             } catch (err) {
@@ -289,45 +300,45 @@ const verifyPassword = async (req, res) => {
     }
 }
 
+        
+
+const login = async (req, res) => {
+    const { email, password } = req.body;
 
 
-// const login = async (req, res) => {
-//     const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ msg: 'Please enter all fields' });
+    }
 
-
-//     if (!email || !password) {
-//         return res.status(400).json({ msg: 'Please enter all fields' });
-//     }
-
-//     try {
-//         const re = await Users.find({ email });
-//         if (!re[0].isAuthenticated) {
-//             return res.status(400).json({ msg: "Please verify your email" })
-//         }
-//         if (re.length === 0)
-//             return res.status(400).json({ msg: 'Invalid credentials' });
-//         else {
-//             const isMatch = await bcrypt.compare(password, re[0].password);
-//             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-//             else {
-//                 const token = generateToken(re[0]._id);
-//                 // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
-//                 res.status(200).json({
-//                     user: {
-//                         id: re[0]._id,
-//                         name: re[0].name,
-//                         email: re[0].email,
-//                         profilePic: re[0].profilePic,
-//                         token : token
-//                     },
-//                 });
-//             }
-//         }
-//     } catch (err) {
-//         console.log(err)
-//         res.status(400).json({ err });
-//     }
-// };
+    try {
+        const re = await Users.find({ email });
+        if (!re[0].isAuthenticated) {
+            return res.status(400).json({ msg: "Please verify your email" })
+        }
+        if (re.length === 0)
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        else {
+            const isMatch = await bcrypt.compare(password, re[0].password);
+            if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+            else {
+                const token = generateToken(re[0]._id);
+                // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
+                res.status(200).json({
+                    user: {
+                        id: re[0]._id,
+                        name: re[0].name,
+                        email: re[0].email,
+                        profilePic: re[0].profilePic,
+                        token : token
+                    },
+                });
+            }
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(400).json({ err });
+    }
+};
 
 
 // /api/users?search=name
@@ -344,7 +355,7 @@ const searchUser = async (req, res) => {
         result = await Users.find({
             _id: { $ne: req.user._id },
             isAuthenticated: { $ne: false }
-        }).select('-password');
+          }).select('-password');
     }
     res.status(200).json(result);
 };
@@ -357,8 +368,8 @@ const allUsers = async (req, res) => {
         const users = await Users.find({
             _id: { $ne: req.user._id },
             isAuthenticated: { $ne: false }
-        }).select('-password');
-
+          }).select('-password');
+          
         res.status(200).json(users);
     } catch (err) {
         res.status(400).json(err);
@@ -416,7 +427,7 @@ const setPassword = async (req, res) => {
         if (!regex.test(password)) {
             return res.status(400).json({ msg: 'Password must contain at least one lowercase letter, one uppercase letter, and one digit.' });
         }
-
+    
         // Verify the token and extract the user ID
         const tokenToId = jwt.verify(id, process.env.JWT_SECRET);
         const _id = tokenToId.id;
@@ -445,13 +456,13 @@ const greetingMessage = async (req, res) => {
 
         const tokenToId = jwt.verify(id, process.env.JWT_SECRET);
         const re = await Users.find({ _id: tokenToId.id });
-
-
+       
+        
         if (re.length === 0) {
             return res.status(400).json({ msg: 'User does not exist' });
         } else {
             try {
-                res.status(200).json({ msg: `hello ${re[0].name}` });
+                res.status(200).json({msg : `hello ${re[0].name}`});
             } catch (err) {
                 res.redirect(`https://chat-app-rs.netlify.app/404`);
             }
