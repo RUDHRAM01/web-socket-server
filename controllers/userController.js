@@ -86,6 +86,7 @@ const login = async (req, res) => {
                         email: re[0].email,
                         profilePic: re[0].profilePic,
                         name: re[0].name,
+                        token : token
                     },
                 });
             }
