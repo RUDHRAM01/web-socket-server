@@ -484,7 +484,9 @@ const loginAsGuest = async (req, res) => {
             return res.status(400).json({ msg: 'username must be between 1 and 15 characters' });
         } 
 
-        const user = await Users.findOne({ username: req.body.username });
+        const checkUserName = req.body.username.trim().toLowerCase();
+
+        const user = await Users.findOne({ username: checkUserName });
         if (user) {
             if(user.isLogin) return res.status(400).json({ msg: 'account in use try different account!' });
             const token = generateToken(user._id);
@@ -502,7 +504,6 @@ const loginAsGuest = async (req, res) => {
             const newUser = new Users({
                 name: 'guest',
                 username: req.body.username,
-                password: await bcrypt.hash(req.body.password, 10),
                 isAuthenticated: true,
                 isLogin: true
             });
@@ -520,7 +521,8 @@ const loginAsGuest = async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).json(err);
+        console.log(err);
+        res.status(400).json({ msg: "something went wrong" });
     }
 }
 
