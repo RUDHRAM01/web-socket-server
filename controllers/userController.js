@@ -348,8 +348,10 @@ const searchUser = async (req, res) => {
     let result = [];
     if (search) {
         result = await Users.find({
-            name: { $regex: search, $options: 'i' },
-            username: { $regex: search, $options: 'i' },
+            $or: [
+                { name: { $regex: search, $options: 'i' } },
+                { username: { $regex: search, $options: 'i' } }
+            ],
             _id: { $ne: req.user._id },
             isAuthenticated: { $ne: false },
         }).select('-password');
