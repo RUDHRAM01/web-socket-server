@@ -321,6 +321,7 @@ const login = async (req, res) => {
             const isMatch = await bcrypt.compare(password, re[0].password);
             if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
             else {
+                await Users.findByIdAndUpdate(re[0]._id, { isLogin: true });
                 const token = generateToken(re[0]._id);
                 // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
                 res.status(200).json({
@@ -348,6 +349,7 @@ const searchUser = async (req, res) => {
     if (search) {
         result = await Users.find({
             name: { $regex: search, $options: 'i' },
+            username: { $regex: search, $options: 'i' },
             _id: { $ne: req.user._id },
             isAuthenticated: { $ne: false },
         }).select('-password');
@@ -474,6 +476,67 @@ const greetingMessage = async (req, res) => {
     }
 }
 
+const loginAsGuest = async (req, res) => {
+    try {
+        if (!req.body.username) {
+            return res.status(400).json({ msg: 'Please enter all fields' });
+        } else if (req.body.username.trim().length <= 1 || req.body.username.trim().length > 15) {
+            return res.status(400).json({ msg: 'username must be between 1 and 15 characters' });
+        } 
+
+        const user = await Users.findOne({ username: req.body.username });
+        if (user) {
+            if(user.isLogin) return res.status(400).json({ msg: 'account in use try different account!' });
+            const token = generateToken(user._id);
+            await Users.findByIdAndUpdate(user._id, { isLogin: true });
+            res.status(200).json({
+                user: {
+                    id: user._id,
+                    name: user.name,
+                    username: user.username,
+                    token: token,
+                    profilePic: user.profilePic
+                },
+            });
+        } else {
+            const newUser = new Users({
+                name: 'guest',
+                username: req.body.username,
+                password: await bcrypt.hash(req.body.password, 10),
+                isAuthenticated: true,
+                isLogin: true
+            });
+            const savedUser = await newUser.save();
+            const token = generateToken(savedUser._id);
+            res.status(200).json({
+                user: {
+                    id: savedUser._id,
+                    name: savedUser.name,
+                    username: savedUser.username,
+                    token: token,
+                    profilePic: savedUser.profilePic
+                },
+            });
+        }
+    }
+    catch (err) {
+        res.status(400).json(err);
+    }
+}
+
+
+const logout = async (req, res) => {
+    try {
+        const user = await Users.findByIdAndUpdate(req.user._id, { isLogin: false });
+        res.status(200).json({ msg: "logged out successfully" });
+    } catch (err) {
+        res.status(400).json({ msg: "something went wrong" });
+    }
+}
+
+
+
+
 module.exports = {
     register,
     login,
@@ -485,6 +548,8 @@ module.exports = {
     updatePassword,
     verifyPassword,
     setPassword,
-    greetingMessage
+    greetingMessage,
+    loginAsGuest,
+    logout
 };
 
