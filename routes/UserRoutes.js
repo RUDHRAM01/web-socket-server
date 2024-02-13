@@ -40,9 +40,14 @@ const uploadLimiter = rateLimit({
 });
 
 
+
+userRouter.post('/login-as-guest', userController.loginAsGuest);
+
 userRouter.post('/register', userController.register);
 
 userRouter.post('/login', loginLimiter, userController.login);
+
+userRouter.post('/logout', protect, userController.logout);
 
 userRouter.get('/search', protect, userController.searchUser);
 
