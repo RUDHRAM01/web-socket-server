@@ -9,7 +9,6 @@ const UserSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
     },
     profilePic: {
         type: String,
@@ -17,14 +16,23 @@ const UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        require: true,
-        minlength: 6
+        minlength: 6,
+        
     },
     isAuthenticated: {
         type: Boolean,
         default: false
     },
-
+    username: {
+        type: String,
+        min: 2,
+        max: 15,
+        unique: true,
+    },
+    isLogin: {
+        type: Boolean,
+        default: false
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);
