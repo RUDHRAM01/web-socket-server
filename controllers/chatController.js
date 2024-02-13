@@ -1,7 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const Chat = require('../models/ChatModel');
 const User = require('../models/UserModel');
-const { json } = require('body-parser');
 
 const accessChat = asyncHandler(async (req, res) => {
     const { userId } = req.body;
@@ -154,6 +153,7 @@ const removeFromGroup = asyncHandler(async (req, res) => {
         res.status(200).json(updateChat);
     }
 });
+
 
 
 
