@@ -488,7 +488,7 @@ const loginAsGuest = async (req, res) => {
 
         const checkUserName = req.body.username.trim().toLowerCase();
 
-        const user = await Users.findOne({ username: checkUserName });
+        const user = await Users.findOne({ username: { $regex: new RegExp(`^${checkUserName}$`, 'i') } });
         if (user) {
             if(user.isLogin) return res.status(400).json({ msg: 'account in use try different account!' });
             const token = generateToken(user._id);
