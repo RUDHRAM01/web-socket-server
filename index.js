@@ -56,7 +56,9 @@ app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
 app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
 app.use('/api/status', [limitTracker, HeadersChecker], StatusRouter);
 app.use('/api/notifications', [limitTracker, HeadersChecker], NotificationRoute);
-
+app.get('/', (req, res) => {
+    res.send('welcome in production env...');
+});
 
 app.use(notFound);
 app.use(errorHandler);
