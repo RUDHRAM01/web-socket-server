@@ -311,7 +311,9 @@ const login = async (req, res) => {
     }
 
     try {
+        console.log(email)
         const re = await Users.find({ email });
+        console.log(re)
         if (!re[0].isAuthenticated) {
             return res.status(400).json({ msg: "Please verify your email" })
         }
