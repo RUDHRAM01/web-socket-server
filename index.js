@@ -61,10 +61,8 @@ app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
 app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
 app.use('/api/status', [limitTracker, HeadersChecker], StatusRouter);
 app.use('/api/notifications', [limitTracker, HeadersChecker], NotificationRoute);
-app.get('/socket.io', (req, res) => {
-    console.log('socket.io');
-    intiSocket(server, allowedOrigins);
-});
+
+intiSocket(server, allowedOrigins);
 app.use(notFound);
 app.use(errorHandler);
 
