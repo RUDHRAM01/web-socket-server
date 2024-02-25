@@ -16,6 +16,7 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 const limitTracker = require('./middleware/AuthLimiter');
 const cookieParser = require('cookie-parser');
 const intiSocket = require('./socket');
+db();
 
 require('dotenv').config();
 const allowedOrigins = [
@@ -52,7 +53,6 @@ app.use(
 
 const server = app.listen(4000, () => {
     console.log('Server is running on port 4000');
-    db();
 });
 intiSocket(server, allowedOrigins);
 
