@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
-let connection = null;
-const check = function () {
-    console.log(connection)
-    console.log(process.env.MONGO_URI)
-};
+
 
 const db = function () {
     try {
@@ -17,6 +13,5 @@ const db = function () {
 };
 
 module.exports = {
-    check,
     db
 }

@@ -6,7 +6,6 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const uploadToS3 = require('../S3');
 const jwt = require('jsonwebtoken');
-const {check} = require('../db/db');
 
 
 
@@ -305,7 +304,6 @@ const verifyPassword = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-    check();
 
     if (!email || !password) {
         return res.status(400).json({ msg: 'Please enter all fields' });
@@ -313,7 +311,6 @@ const login = async (req, res) => {
 
     try {
         const re = await Users.find({ email });
-        console.log(re);
         if (!re[0].isAuthenticated) {
             return res.status(400).json({ msg: "Please verify your email" })
         }

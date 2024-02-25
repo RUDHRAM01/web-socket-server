@@ -44,17 +44,11 @@ app.use(cors({
 app.use(bodyParser.json());
 app.options('*', cors());
 app.use(cookieParser());
-app.set('trust proxy', ['13.228.225.19', '18.142.128.26', '54.254.162.138']);
 app.use(
     express.urlencoded({
         extended: true,
     })
 )
-
-const server = app.listen(4000, () => {
-    console.log('Server is running on port 4000');
-});
-intiSocket(server, allowedOrigins);
 
 
 app.use('/api/auth',Auth);
@@ -67,3 +61,8 @@ app.use('/api/notifications', [limitTracker, HeadersChecker], NotificationRoute)
 app.use(notFound);
 app.use(errorHandler);
 
+
+const server = app.listen(4000, () => {
+    console.log('Server is running on port 4000');
+});
+intiSocket(server , allowedOrigins);
