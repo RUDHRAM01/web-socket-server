@@ -4,7 +4,7 @@ const { v4: uuid } = require('uuid');
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
+        accessKeyId: process.env.AWS_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
 });
