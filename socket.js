@@ -42,7 +42,7 @@ const addNotification = (notificationData) => {
 }
 
 function initSocket(server, allowedOrigins) {
-    
+    console.log("Socket initialized");
     if (!server) return console.log("Server not found");
     if (!allowedOrigins) return console.log("Allowed origins not found");
 

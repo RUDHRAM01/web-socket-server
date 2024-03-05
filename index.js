@@ -53,6 +53,7 @@ app.use(
 const server = app.listen(4000, () => {
     console.log('Server is running on port 4000');
 });
+intiSocket(server, allowedOrigins);
 
 
 app.use('/api/auth',Auth);
@@ -62,7 +63,7 @@ app.use('/api/messages',[limitTracker,HeadersChecker], messageRouter);
 app.use('/api/status', [limitTracker, HeadersChecker], StatusRouter);
 app.use('/api/notifications', [limitTracker, HeadersChecker], NotificationRoute);
 
-intiSocket(server, allowedOrigins);
+
 app.use(notFound);
 app.use(errorHandler);
 
