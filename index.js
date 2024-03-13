@@ -18,6 +18,7 @@ const cookieParser = require('cookie-parser');
 const intiSocket = require('./socket');
 db();
 
+
 require('dotenv').config();
 const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
@@ -25,6 +26,8 @@ const allowedOrigins = [
     /google\.app$/,
     /chat-app-rs.netlify\.app$/
   ];
+
+intiSocket(server, allowedOrigins);
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
@@ -51,7 +54,7 @@ app.use(
 )
 
 
-intiSocket(server, allowedOrigins);
+
 
 
 app.use('/api/auth',Auth);
