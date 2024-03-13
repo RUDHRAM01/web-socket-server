@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const chats = require('./data/data');
 const {db} = require('./db/db');
 const userRouter = require('./routes/UserRoutes');
 const chatRouter = require('./routes/ChatRoutes');
@@ -50,9 +50,7 @@ app.use(
     })
 )
 
-const server = app.listen(4000, () => {
-    console.log('Server is running on port 4000');
-});
+
 intiSocket(server, allowedOrigins);
 
 
@@ -68,3 +66,6 @@ app.use(notFound);
 app.use(errorHandler);
 
 
+server.listen(4000, () => {
+    console.log('Server is running on port 4000');
+});
