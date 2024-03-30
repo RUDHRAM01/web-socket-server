@@ -19,9 +19,9 @@ const loginLimiter = rateLimit({
   },
 });
 
-const logoutLimiter = rateLimit({
+const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per windowMs
+  max: 2000, // Limit each IP to 5 requests per windowMs
   handler: (req, res) => {
     res.status(429).json({
       msg: 'Too many requests from this IP, please try again later.',
@@ -41,13 +41,13 @@ const uploadLimiter = rateLimit({
 
 
 
-userRouter.post('/login-as-guest', userController.loginAsGuest);
+userRouter.post('/login-as-guest',loginLimiter, userController.loginAsGuest);
 
-userRouter.post('/register', userController.register);
+userRouter.post('/register',loginLimiter, userController.register);
 
 userRouter.post('/login', loginLimiter, userController.login);
 
-userRouter.post('/logout', protect, userController.logout);
+userRouter.post('/logout', protect,loginLimiter, userController.logout);
 
 userRouter.get('/search', protect, userController.searchUser);
 
@@ -60,8 +60,8 @@ userRouter.post('/updateName', protect, userController.updateName);
 
 userRouter.post('/updatePassword', loginLimiter, userController.updatePassword);
 
-userRouter.post('/setPassword', userController.setPassword);
+userRouter.post('/setPassword',loginLimiter, userController.setPassword);
 
-userRouter.post('/greetingMessage', userController.greetingMessage);
+userRouter.post('/greetingMessage', loginLimiter,userController.greetingMessage);
 
 module.exports = userRouter;
