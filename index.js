@@ -55,6 +55,8 @@ app.use(cors({
 	],
 }));
 
+// set truset proxy
+app.set('trust proxy', 1);
 app.use(bodyParser.json());
 app.options('*', cors());
 app.use(cookieParser());
