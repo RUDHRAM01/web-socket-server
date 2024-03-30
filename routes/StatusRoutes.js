@@ -7,10 +7,10 @@ const rateLimit = require('express-rate-limit');
 
 const uploadLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 10, // Limit each IP to 10 requests per windowMs
+    max: 2, // Limit each IP to 10 requests per windowMs
     handler: (req, res) => {
         res.status(429).json({
-            msg: 'Too many requests from this IP, please try again later.',
+            msg: 'you can only upload 2 images at a time. Please try again later. 🙂',
         });
     },
 });
