@@ -19,6 +19,17 @@ const intiSocket = require('./socket');
 db();
 
 
+
+const checkUserAgent = (req, res, next) => {
+    const userAgent = req.get('User-Agent');
+    if (!userAgent || !userAgent.includes('Mozilla')) {
+        return res.status(403).json({ error: '[High Security] Access denied...' });
+    }
+    next();
+};
+
+app.use(checkUserAgent);
+
 require('dotenv').config();
 const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
@@ -57,6 +68,10 @@ app.use(
 
 
 
+app.get('/', (req, res) => {
+    res.send('welcome...');
+});
+
 app.use('/api/auth',Auth);
 app.use('/api/users',[limitTracker,HeadersChecker], userRouter);
 app.use('/api/chats',[limitTracker,HeadersChecker], chatRouter);
@@ -70,5 +85,6 @@ app.use(errorHandler);
 
 
 server.listen(4000, () => {
+
     console.log('Server is running on port 4000');
 });
