@@ -57,6 +57,7 @@ function initSocket(server, allowedOrigins) {
     });
 
     io.on('connection', (socket) => {
+        console.log("New connection: ", socket);
         socket.on("add", id => {
             addUserToSocket(socket, id);
             io.to(socket.id).emit("connected");
