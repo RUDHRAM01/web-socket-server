@@ -35,7 +35,9 @@ const allowedOrigins = [
     "http://localhost:3000", // Your local development environment
     "https://chat-app-rs.netlify.app", // Netlify domain
     /google\.app$/,
-    /chat-app-rs.netlify\.app$/
+    /chat-app-rs.netlify\.app$/,
+    "wss://web-socket-server-ivory.vercel.app/",
+    "https://web-socket-server-ivory.vercel.app/",
   ];
 
 intiSocket(server, allowedOrigins);
