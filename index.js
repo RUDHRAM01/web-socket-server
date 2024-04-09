@@ -40,7 +40,8 @@ const allowedOrigins = [
     "https://web-socket-server-ivory.vercel.app/",
   ];
 
-intiSocket(server, allowedOrigins);
+
+
 app.use(cors({
     origin: allowedOrigins,
     credentials: true,
@@ -66,7 +67,7 @@ app.use(
         extended: true,
     })
 )
-
+app.set(intiSocket(server, allowedOrigins));
 
 
 
