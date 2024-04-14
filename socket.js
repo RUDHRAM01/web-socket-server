@@ -47,13 +47,11 @@ function initSocket(server, allowedOrigins) {
 
 
     const io = SocketIo(server, {
-        pingTimeout: 60000,
         cors: {
-            origin: allowedOrigins,
+            origin: "https://chat-app-rs.netlify.app",
             methods: ["GET", "POST"],
             credentials: true
         }
-
     });
 
     io.on('connection', (socket) => {
