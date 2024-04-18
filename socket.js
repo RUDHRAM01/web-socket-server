@@ -48,7 +48,7 @@ function initSocket(server, allowedOrigins) {
 
     const io = SocketIo(server, {
         cors: {
-            origin: "https://chat-app-rs.netlify.app",
+            origin: allowedOrigins,
             methods: ["GET", "POST"],
             credentials: true
         }
