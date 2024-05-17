@@ -420,8 +420,10 @@ const updatePassword = async (req, res) => {
     if (!email) return res.status(400).json({ msg: "No email entered" });
     const findEmail = await Users.findOne({ email });
     if (!findEmail) return res.status(400).json({ msg: "Email not found" });
-    forgotEmailPassword(email, findEmail._id);
-    res.status(200).json({ msg: "please check your mail box" });
+    await forgotEmailPassword(email, findEmail._id);
+    setTimeout(async () => {
+      res.status(200).json({ msg: "please check your mail box" });
+    }, 2000); 
   } catch (err) {
     res.status(400).json(err);
   }
