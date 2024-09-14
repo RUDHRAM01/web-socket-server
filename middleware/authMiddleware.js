@@ -48,6 +48,7 @@
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/UserModel');
+const { generateToken } = require('../db/token');
 
 const protect = async (req, res, next) => {
     let token;
@@ -67,18 +68,26 @@ const protect = async (req, res, next) => {
 
     // Token exists, proceed to verify it
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);   
         // Add user data to the request object
         req.user = await User.findById(decoded.id).select('-password');
         
         next(); // Proceed to the next middleware
-    } catch (err) {
-        if (err.name === 'JsonWebTokenError' && err.message === 'jwt malformed') {
-            return res.status(401).json({ msg: 'Malformed token. Please provide a valid token.' });
+    }catch (err) {
+        if (err.name === 'TokenExpiredError') {
+          const tok = req.headers.authorization.split(' ')[1];
+          const decodedToken = jwt.decode(tok); 
+          const newToken = generateToken(decodedToken.id); 
+          console.log('Token expired', newToken);
+          return res.status(401).json({ msg: 'token-exp', token: newToken });
         }
-        return res.status(401).json({ msg: 'Not authorized, token failed' });
-    }
+    
+        if (err.name === 'JsonWebTokenError' && err.message === 'jwt malformed') {
+          return res.status(401).json({ msg: 'Malformed token. Please provide a valid token.' });
+        }
+    
+        return res.status(401).json({ msg: 'Token error', error: err.message });
+      }
 }
 
 module.exports = {
