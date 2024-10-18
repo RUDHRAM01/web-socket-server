@@ -246,11 +246,12 @@ const register = async (req, res) => {
       try {
         const token = generateToken(newUser._id);
         const savedUser = await newUser.save();
-        sendVerifyMail(email, savedUser._id);
-
-        res
+        await sendVerifyMail(email, savedUser._id);
+        setTimeout(async () => {
+          res
           .status(200)
           .json({ msg: "Account Created! Please verify your email" });
+        }, 2000);
       } catch (err) {
         res.status(400).json({ err });
       }
