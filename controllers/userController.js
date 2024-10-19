@@ -319,7 +319,11 @@ const login = async (req, res) => {
       const isMatch = await bcrypt.compare(password, re[0].password);
       if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
       else {
-        await Users.findByIdAndUpdate(re[0]._id, { isLogin: true });
+        var FcmToken = "";
+        if (req.body.fcmToken) {
+          FcmToken = req.body.fcmToken;
+        }
+        await Users.findByIdAndUpdate(re[0]._id, { isLogin: true, fcmToken: FcmToken });
         const token = generateToken(re[0]._id);
         // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
         res.status(200).json({
@@ -511,7 +515,11 @@ const loginAsGuest = async (req, res) => {
           .status(400)
           .json({ msg: "account in use try different account!" });
       const token = generateToken(user._id);
-      await Users.findByIdAndUpdate(user._id, { isLogin: true });
+      var FcmToken = "";
+      if (req.body.fcmToken) {
+        FcmToken = req.body.fcmToken;
+      }
+      await Users.findByIdAndUpdate(user._id, { isLogin: true, fcmToken: FcmToken });
       res.status(200).json({
         user: {
           id: user._id,

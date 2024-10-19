@@ -1,5 +1,7 @@
 const SocketIo = require('socket.io');
 const NotificationModel = require("./models/NotificationModel")
+const Users = require("./models/UserModel");
+const axios = require("axios");
 
 
 let sockets = {};
@@ -41,6 +43,23 @@ const addNotification = (notificationData) => {
     })
 }
 
+const sendSNS = async(userId, messData) => {
+    const user = Users.findById(userId);
+    if (!user) "";
+    if (!user.fcmToken) "";
+    const message = {
+        title: "Chat App RS",
+        body: "New message from " + messData?.name,
+        token: user.fcmToken
+    }
+   try{
+   const res =  await axios.post(process.env.FCM_URL, message);
+    console.log(res);
+   }catch(err){
+         console.log(err);
+    }
+}
+
 function initSocket(server, allowedOrigins) {
     if (!server) return console.log("Server not found");
     if (!allowedOrigins) return console.log("Allowed origins not found");
@@ -78,6 +97,7 @@ function initSocket(server, allowedOrigins) {
         socket.on('receive notification', async (notificationData) => {
             const userSocket = getUserSocket(notificationData.to);
             if (!userSocket) {
+                await sendSNS(notificationData.to, notificationData);
                 return await addNotification(notificationData);
             };
             const currentSocket = getCurrent(notificationData.to);
