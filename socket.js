@@ -45,8 +45,8 @@ const addNotification = (notificationData) => {
 
 const sendSNS = async(userId, messData) => {
     const user = Users.findById(userId);
-    if (!user) "";
-    if (!user.fcmToken) "";
+    if (!user) return;
+    if (!user.fcmToken) return;
     const message = {
         title: "Chat App RS",
         body: "New message from " + messData?.name,
