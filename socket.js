@@ -44,9 +44,10 @@ const addNotification = (notificationData) => {
 }
 
 const sendSNS = async(userId, messData) => {
-    const user = Users.findById(userId);
+    const user = await Users.findById(userId);
     if (!user) return;
     if (!user.fcmToken) return;
+    console.log("Sending notification to: ", user.fcmToken);
     const message = {
         title: "Chat App RS",
         body: "New message from " + messData?.name,
@@ -95,13 +96,16 @@ function initSocket(server, allowedOrigins) {
         });
 
         socket.on('receive notification', async (notificationData) => {
+            console.log("Notification received: ", notificationData);
             const userSocket = getUserSocket(notificationData.to);
             if (!userSocket) {
+                console.log("User not connected");
                 await sendSNS(notificationData.to, notificationData);
                 return await addNotification(notificationData);
             };
             const currentSocket = getCurrent(notificationData.to);
             if (notificationData.chat !== currentSocket) {
+                console.log("User not ");
                 await addNotification(notificationData);
                 io.to(userSocket).emit("notification received");
             }
