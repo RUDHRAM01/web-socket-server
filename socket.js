@@ -1,6 +1,8 @@
 const SocketIo = require('socket.io');
+const AWS = require('aws-sdk');
 const NotificationModel = require("./models/NotificationModel")
-
+const sqs = new AWS.SQS({ region:  process.env.AWS_REGION });
+const QUEUE_URL = process.env.QUEUE_URL;
 
 let sockets = {};
 let current = {};
@@ -87,7 +89,29 @@ function initSocket(server, allowedOrigins) {
             }
         })
 
-        socket.on("new message", (newMessageReceived) => {
+        socket.on("new message", (newMessageRec) => {
+            var newMessageReceived = newMessageRec.data; 
+            if(newMessageRec?.fcmToken) {
+                var sqsMessage = {
+                    title: "testing",
+                    body: "testing",
+                    token: newMessageRec?.fcmToken
+                }
+                var params = {
+                    MessageBody: JSON.stringify(sqsMessage),
+                    QueueUrl: QUEUE_URL,
+                    MessageGroupId: Math.random().toString(36).substring(7),
+                    MessageDeduplicationId: Math.random().toString(36).substring(7)
+                };
+                console.log("Sending message to SQS", params);
+                sqs.sendMessage(params, function (err, data) {
+                    if (err) {
+                        console.log("Error", err);
+                    } else {
+                        console.log("Success", data.MessageId);
+                    }
+                });
+            }
             if (!newMessageReceived.users) return console.log("Chat.users not defined");
             newMessageReceived.users.forEach((user) => {
                 if (user._id === newMessageReceived.sender) return;

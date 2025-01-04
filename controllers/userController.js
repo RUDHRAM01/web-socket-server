@@ -319,7 +319,7 @@ const login = async (req, res) => {
       const isMatch = await bcrypt.compare(password, re[0].password);
       if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
       else {
-        await Users.findByIdAndUpdate(re[0]._id, { isLogin: true });
+        await Users.findByIdAndUpdate(re[0]._id, { isLogin: true, fcmToken: req.body?.fcmToken });
         const token = generateToken(re[0]._id);
         // res.cookie('xxrsr', token, { httpOnly: true, maxAge: 3600 * 1000, sameSite: 'None', secure: true})
         res.status(200).json({
